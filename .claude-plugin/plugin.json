@@ -1,0 +1,8 @@
+{
+  "name": "handoff",
+  "description": "Saves a structured session-summary markdown file when rate limits or context window approaches. Enables seamless AI-to-AI work handoff.",
+  "author": {
+    "name": "Ozgur Ersil",
+    "url": "https://github.com/ozgurersil"
+  }
+}

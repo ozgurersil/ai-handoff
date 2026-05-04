@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ai-handoff",
+  "description": "Claude Code skill for saving session context and handing off work to another AI when rate limits approach.",
+  "owner": {
+    "name": "Ozgur Ersil",
+    "url": "https://github.com/ozgurersil"
+  },
+  "plugins": [
+    {
+      "name": "handoff",
+      "description": "Save session context to markdown when rate limit approaches. Resume instantly in a new AI session.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

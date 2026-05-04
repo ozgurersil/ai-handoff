@@ -26,10 +26,12 @@ The next session opens the file and picks up immediately.
 
 ## Install
 
-### Option 1 — Claude Code plugin registry (recommended)
+### Option 1 — Claude Code plugin marketplace (recommended)
 
 ```bash
-claude plugin install ozgurersil/ai-handoff
+# Add the marketplace, then install the plugin
+claude plugin marketplace add ozgurersil/ai-handoff
+claude plugin install handoff
 ```
 
 ### Option 2 — Manual
@@ -39,7 +41,8 @@ claude plugin install ozgurersil/ai-handoff
 git clone https://github.com/ozgurersil/ai-handoff.git
 
 # Copy skill to your Claude skills directory
-cp -r ai-handoff/skills/handoff ~/.claude/skills/
+mkdir -p ~/.claude/skills/handoff
+cp ai-handoff/skills/handoff/skill.md ~/.claude/skills/handoff/SKILL.md
 ```
 
 ---
