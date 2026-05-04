@@ -1,5 +1,7 @@
 # ai-handoff
 
+![Claude Code session usage bar showing 53% used with 3 hr 30 min until reset](ss.png)
+
 A [Claude Code](https://claude.ai/code) skill that saves a structured session-summary markdown file when your rate limit or context window is approaching — so another AI (or a fresh session) can resume work without losing context.
 
 ---
