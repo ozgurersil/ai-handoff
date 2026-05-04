@@ -88,20 +88,12 @@ Collect from the conversation:
 - Next concrete steps
 - Any open questions or blockers
 
-### Step 3 — Ask scope
+### Step 3 — Determine path
 
-Ask the user:
-
-> **Where should the handoff be saved?**
-> 1. **Project** — `./handoff-{YYYY-MM-DD-HHMM}.md` (current directory, gitignored)
-> 2. **Global** — `~/.claude/handoffs/handoff-{YYYY-MM-DD-HHMM}.md` (shared across projects)
-
-Accept: `1`, `2`, `project`, `global`, or a custom path.
+Default to project scope. No prompt needed.
 
 **Path rules:**
-- Project: use `./handoffs/handoff-{ts}.md` if `handoffs/` dir exists, else `./handoff-{ts}.md`
-- Global: `~/.claude/handoffs/handoff-{ts}.md` — create dir if needed
-- Custom: use exactly as typed, create parent dirs if needed
+- Use `./handoffs/handoff-{ts}.md` if `handoffs/` dir exists, else `./handoff-{ts}.md`
 
 ### Step 4 — Write the file
 
