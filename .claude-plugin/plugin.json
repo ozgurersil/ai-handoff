@@ -1,8 +1,28 @@
 {
   "name": "handoff",
-  "description": "Saves a structured session-summary markdown file when rate limits or context window approaches. Enables seamless AI-to-AI work handoff.",
+  "description": "Saves a structured session-summary markdown file when rate limits or context window approaches. Enables seamless AI-to-AI work handoff across Claude Code, Cursor, Codex, Windsurf, Antigravity, Copilot, Aider, and Gemini.",
   "author": {
     "name": "Ozgur Ersil",
     "url": "https://github.com/ozgurersil"
+  },
+  "skills": [
+    {
+      "name": "handoff",
+      "path": "./skills/handoff"
+    }
+  ],
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/setup-check.js",
+            "timeout": 5,
+            "statusMessage": "Checking handoff config..."
+          }
+        ]
+      }
+    ]
   }
 }

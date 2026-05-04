@@ -34,6 +34,14 @@ claude plugin marketplace add ozgurersil/ai-handoff
 claude plugin install handoff
 ```
 
+After install, Claude Code will prompt you to run setup on your next session start:
+
+```
+handoff setup
+```
+
+Claude will ask which AI coding tool you use and save the preference to `~/.claude/handoff-config.json`. Handoff files will then include resume instructions tailored to your tool.
+
 ### Option 2 — Manual
 
 ```bash
@@ -104,6 +112,28 @@ Generated file: `./handoff-YYYY-MM-DD-HHMM.md`
 
 ---
 
+## Supported Tools
+
+The handoff file includes per-tool resume instructions. Skill auto-detects which tools are configured in your project and asks which one will resume.
+
+You choose your tool once during setup. Handoff files include only your tool's resume instructions.
+
+| Tool | Resume method |
+|------|--------------|
+| **Claude Code** | `Continue from handoff: {file}` |
+| **Cursor** | `@{file}` in chat |
+| **Windsurf** | `@{file}` in Cascade |
+| **Antigravity** (Google) | `@{file}` in chat |
+| **OpenAI Codex CLI** | `codex --context {file} "Continue"` |
+| **GitHub Copilot** | `#file:{file}` in Copilot Chat |
+| **Aider** | `aider --read {file}` |
+| **Gemini CLI** | `gemini --context {file} "Continue"` |
+| Any other tool | Paste file contents as first message |
+
+To change your tool: `handoff setup`
+
+---
+
 ## Why This Matters
 
 | Without ai-handoff | With ai-handoff |
@@ -112,7 +142,7 @@ Generated file: `./handoff-YYYY-MM-DD-HHMM.md`
 | Re-explain project from scratch | AI resumes in seconds |
 | Decisions forgotten | Decision log captured |
 | Next steps unclear | Prioritized action list |
-| Random file names searched | Exact files + change summary |
+| Works only in Claude Code | Portable across all major AI tools |
 
 ---
 
