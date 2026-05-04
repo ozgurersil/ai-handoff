@@ -79,7 +79,7 @@ Any of these phrases activates the skill automatically:
 Open a new Claude Code session, then:
 
 ```
-Continue from handoff: handoff-2026-05-04-1430.md
+Continue from handoff: handoffs/handoff-2026-05-04-1430_claude.md
 ```
 
 Claude reads the file and resumes immediately.
@@ -88,13 +88,17 @@ Claude reads the file and resumes immediately.
 
 ## Output Format
 
-Generated file: `./handoff-YYYY-MM-DD-HHMM.md`
+Generated file: `./handoffs/handoff-YYYY-MM-DD-HHmm_{model-slug}.md`
+
+Examples: `handoffs/handoff-2026-05-04-1437_claude.md`, `handoffs/handoff-2026-05-04-1437_gpt.md`
+
+The `handoffs/` directory is created automatically if it doesn't exist.
 
 ```
 # AI Handoff — my-project — 2026-05-04 14:30
 
 > Handoff reason: rate limit approaching
-> Resume command: Continue from handoff: handoff-2026-05-04-1430.md
+> Resume command: Continue from handoff: handoffs/handoff-2026-05-04-1430_claude.md
 
 ## Project Overview
 ## Session Summary
@@ -119,7 +123,7 @@ You choose your tool once during setup. Handoff files include only your tool's r
 
 | Tool | Resume method |
 |------|--------------|
-| **Claude Code** | `Continue from handoff: {file}` |
+| **Claude Code** | `Continue from handoff: handoffs/{file}` |
 | **Cursor** | `@{file}` in chat |
 | **Windsurf** | `@{file}` in Cascade |
 | **Antigravity** (Google) | `@{file}` in chat |
