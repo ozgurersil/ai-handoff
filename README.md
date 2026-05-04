@@ -26,32 +26,31 @@ The next session opens the file and picks up immediately.
 
 ## Install
 
-### Option 1 — Claude Code plugin marketplace (recommended)
+### Option 1 — skills CLI (works with all AI tools)
 
 ```bash
-# Add the marketplace, then install the plugin
-claude plugin marketplace add ozgurersil/ai-handoff
-claude plugin install handoff
+npx skills@latest add ozgurersil/ai-handoff
 ```
 
-After install, Claude Code will prompt you to run setup on your next session start:
+Installs to Claude Code, Cursor, Windsurf, Antigravity, Codex, Copilot, Aider, Gemini — whichever you use.
 
-```
-handoff setup
-```
-
-Claude will ask which AI coding tool you use and save the preference to `~/.claude/handoff-config.json`. Handoff files will then include resume instructions tailored to your tool.
-
-### Option 2 — Manual
+### Option 2 — Claude Code plugin marketplace
 
 ```bash
-# Clone
+claude plugin marketplace add ozgurersil/ai-handoff && claude plugin install handoff
+```
+
+### Option 3 — Manual
+
+```bash
 git clone https://github.com/ozgurersil/ai-handoff.git
-
-# Copy skill to your Claude skills directory
 mkdir -p ~/.claude/skills/handoff
-cp ai-handoff/skills/handoff/skill.md ~/.claude/skills/handoff/SKILL.md
+cp ai-handoff/skills/handoff/SKILL.md ~/.claude/skills/handoff/SKILL.md
 ```
+
+---
+
+**First use:** When you run `/handoff` for the first time, Claude will ask which AI coding tool you use and save the preference. All future handoff files include resume instructions tailored to that tool. To reconfigure: say `"handoff setup"` anytime.
 
 ---
 
