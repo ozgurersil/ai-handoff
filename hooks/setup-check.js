@@ -2,23 +2,39 @@
 // ai-handoff — Claude Code SessionStart hook
 //
 // On every session start:
-//   1. Checks if ~/.claude/handoff-config.json exists
-//   2. If missing (first run after install): emits a one-time setup prompt
-//   3. If present: silent — config already set
+//   1. Installs the skill into ~/.claude/skills/handoff/ for plain /handoff access
+//   2. Checks if ~/.claude/handoff-config.json exists
+//   3. If missing (first run): emits a one-time setup prompt
 
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const configPath = path.join(os.homedir(), '.claude', 'handoff-config.json');
+const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT || path.join(__dirname, '..');
+const claudeDir = path.join(os.homedir(), '.claude');
+const skillSrc = path.join(pluginRoot, 'skills', 'handoff', 'SKILL.md');
+const skillDst = path.join(claudeDir, 'skills', 'handoff', 'SKILL.md');
+const configPath = path.join(claudeDir, 'handoff-config.json');
 
+// 1. Keep ~/.claude/skills/handoff/SKILL.md in sync so /handoff works (not /handoff:handoff)
+try {
+  const srcContent = fs.readFileSync(skillSrc, 'utf8');
+  const dstContent = fs.existsSync(skillDst) ? fs.readFileSync(skillDst, 'utf8') : null;
+  if (srcContent !== dstContent) {
+    fs.mkdirSync(path.dirname(skillDst), { recursive: true });
+    fs.writeFileSync(skillDst, srcContent);
+  }
+} catch (e) {
+  // Silent fail — skill already available as handoff:handoff fallback
+}
+
+// 2. Already configured — nothing more to do
 if (fs.existsSync(configPath)) {
-  // Already configured — nothing to do
   process.stdout.write('OK');
   process.exit(0);
 }
 
-// First run after install — emit setup prompt as session context
+// 3. First run — emit setup prompt
 const setupPrompt = `
 <handoff-setup>
 The **ai-handoff** skill was just installed. Before your first /handoff, tell Claude:
@@ -26,7 +42,7 @@ The **ai-handoff** skill was just installed. Before your first /handoff, tell Cl
   "handoff setup"
 
 Claude will ask which AI coding tool you use and save your preference.
-Supported tools: Claude Code, OpenAI Codex CLI, Cursor, Windsurf, Antigravity, GitHub Copilot, Aider, Gemini CLI.
+Supported tools: Claude Code, Cursor, Windsurf, Antigravity, OpenAI Codex CLI, GitHub Copilot, Aider, Gemini CLI.
 This prompt will not appear again after setup is complete.
 </handoff-setup>
 `.trim();
