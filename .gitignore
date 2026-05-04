@@ -1,0 +1,13 @@
+# Generated handoff files (users generate these locally)
+handoff-*.md
+handoffs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
