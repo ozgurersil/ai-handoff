@@ -23,11 +23,22 @@ Before writing, collect from the conversation:
 - Next concrete steps
 - Any open questions or blockers
 
-## Step 2 — Determine output path
+## Step 2 — Ask scope
 
-Default: `./handoff-{YYYY-MM-DD-HHMM}.md` in the working directory.
-If a `handoffs/` directory exists, use `./handoffs/handoff-{YYYY-MM-DD-HHMM}.md`.
-Use the current timestamp in the filename.
+Before writing, ask the user exactly this:
+
+> **Where should the handoff be saved?**
+> 1. **Project** — `./handoff-{YYYY-MM-DD-HHMM}.md` (current working directory, gitignored)
+> 2. **Global** — `~/.claude/handoffs/handoff-{YYYY-MM-DD-HHMM}.md` (shared across all projects)
+
+Wait for their reply. Accept: `1`, `2`, `project`, `global`, or a custom path.
+
+**Path resolution rules:**
+- **Project (1):** If a `handoffs/` dir exists in cwd, use `./handoffs/handoff-{ts}.md`. Otherwise `./handoff-{ts}.md`.
+- **Global (2):** Use `~/.claude/handoffs/handoff-{ts}.md`. Create the directory if it doesn't exist.
+- **Custom path:** Use exactly what the user typed. Create parent dirs if needed.
+
+Use the current timestamp (`YYYY-MM-DD-HHMM`) in the filename.
 
 ## Step 3 — Write the file
 
