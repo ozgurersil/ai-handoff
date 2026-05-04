@@ -93,7 +93,11 @@ Collect from the conversation:
 Default to project scope. No prompt needed.
 
 **Path rules:**
-- Use `./handoffs/handoff-{ts}.md` if `handoffs/` dir exists, else `./handoff-{ts}.md`
+- Always save to `./handoffs/`. Create it if missing: `mkdir -p ./handoffs`
+- Filename format: `handoff-{YYYY-MM-DD-HHmm}_{model-slug}.md`
+  - Get current time via `date '+%Y-%m-%d-%H%M'`
+  - Model slug: `claude` for any Claude model, `gpt` for OpenAI, `gemini` for Google, etc.
+  - Example: `handoffs/handoff-2026-05-04-1437_claude.md`
 
 ### Step 4 — Write the file
 
