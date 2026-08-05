@@ -81,7 +81,7 @@ Any of these phrases activates the skill automatically:
 Open a new Claude Code session, then:
 
 ```
-Continue from handoff: handoffs/handoff-2026-05-04-1430_claude.md
+Continue from handoff: handoffs/handoff-fix-auth-redirect-2026-05-04-1430-claude.md
 ```
 
 Claude reads the file and resumes immediately.
@@ -90,30 +90,32 @@ Claude reads the file and resumes immediately.
 
 ## Output Format
 
-Generated file: `./handoffs/handoff-YYYY-MM-DD-HHmm_{model-slug}.md`
+Generated file: `./handoffs/handoff-{summary}-YYYY-MM-DD-HHmm-{model-slug}.md`
 
-Examples: `handoffs/handoff-2026-05-04-1437_claude.md`, `handoffs/handoff-2026-05-04-1437_gpt.md`
+Examples: `handoffs/handoff-fix-auth-redirect-2026-05-04-1437-claude.md`, `handoffs/handoff-add-stripe-webhooks-2026-05-04-1437-gpt.md`
 
 The `handoffs/` directory is created automatically if it doesn't exist.
 
+Sections with nothing to report are omitted, so the file stays small:
+
 ```
-# AI Handoff — my-project — 2026-05-04 14:30
+# Handoff — my-project — 2026-05-04 14:30 — claude
 
-> Handoff reason: rate limit approaching
-> Resume command: Continue from handoff: handoffs/handoff-2026-05-04-1430_claude.md
+**Reason:** rate limit approaching
 
-## Project Overview
-## Session Summary
-  - Completed This Session
-  - In Progress (stopped here)
-  - Blocked / Issues
-## Key Decisions
-## Files Modified
-## Environment Snapshot
+## Resume (Claude Code)
+## Context          — project, goal, cwd, branch, last commit, dirty files
+## Done
+## In Progress
+## Blocked
+## Decisions
+## Files
 ## Next Steps
 ## Open Questions
-## Context for Next AI
+## Gotchas
 ```
+
+Git is optional. Without a repo, the branch/commit line is dropped and the **Files** section becomes exhaustive — every file touched, with what changed — since there's no `git diff` for the next AI to fall back on.
 
 ---
 

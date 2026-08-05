@@ -81,7 +81,10 @@ If the file is missing, run Setup Mode A first before continuing.
 Collect from the conversation:
 - What project/task is being worked on
 - Working directory (check CLAUDE.md or infer from file paths seen)
-- Git state — run `git status --short` and `git log --oneline -5` if in a git repo
+- Git state — one call: `git log --oneline -1 2>/dev/null; git status --short --branch 2>&1`
+  - Output starts with `fatal:` → **not** a repo. Skip all git output, follow the no-VCS rules below.
+  - `## No commits yet on <branch>` → repo with zero commits. Use the branch, omit the commit.
+  - Otherwise: first line is the last commit, `## <branch>...` is the branch, remaining lines are uncommitted changes.
 - All files created or modified this session
 - All decisions made and their rationale
 - Current task state (done / in-progress / blocked)
@@ -94,158 +97,93 @@ Default to project scope. No prompt needed.
 
 **Path rules:**
 - Always save to `./handoffs/`. Create it if missing: `mkdir -p ./handoffs`
-- Filename format: `handoff-{YYYY-MM-DD-HHmm}_{model-slug}.md`
+- Filename format: `handoff-{summary-slug}-{YYYY-MM-DD-HHmm}-{model-slug}.md`
+  - `{summary-slug}`: 2–4 words describing what the session was about, kebab-case, lowercase, no punctuation. E.g. `fix-auth-redirect`, `add-stripe-webhooks`, `refactor-db-layer`.
   - Get current time via `date '+%Y-%m-%d-%H%M'`
   - Model slug: `claude` for any Claude model, `gpt` for OpenAI, `gemini` for Google, etc.
-  - Example: `handoffs/handoff-2026-05-04-1437_claude.md`
+  - Example: `handoffs/handoff-fix-auth-redirect-2026-05-04-1437-claude.md`
 
 ### Step 4 — Write the file
 
-Generate and save a markdown file:
+Write densely. Rules:
+- **Omit any section that has no content.** Never emit "None", "N/A", or placeholder rows.
+- Facts only — no restating, no filler, no prose where a bullet works.
+- Bullets are fragments, not sentences. Drop articles and hedging.
+- Do not include a section's data twice (e.g. a file listed under Completed need not repeat in Files Modified unless the note adds something).
+
+**No git? (or any VCS)** — the handoff still works, it just carries more weight:
+- Drop the branch/commit part of the Context line; keep `{cwd}`.
+- The **Files** section is now the only record of what changed — list every file touched this session, no exceptions, and say what changed in each. Do not rely on the next AI running `git diff`.
+- Under **Gotchas**, note anything unsaved or unrecoverable (edits with no commit to fall back on, generated files, manual steps already applied to a DB/service).
+
+Template (skip empty parts):
 
 ```markdown
-# AI Handoff — {project name} — {YYYY-MM-DD HH:MM}
+# Handoff — {project} — {YYYY-MM-DD HH:MM} — {model}
 
-> **Handoff reason:** {rate limit approaching | context window full | manual save | other}
-> **Handing off from:** {model name if known}
+**Reason:** {rate limit | context full | manual}
 
----
+## Resume ({tool})
 
-## Resume Instructions
+    {resume command — see table below}
 
-{Include ONLY the block(s) matching the editor from ~/.claude/handoff-config.json.
- If editor is "all", include every block below.}
+## Context
 
-### Claude Code
-```
-Continue from handoff: {filename}
-```
+{1–2 sentences: what the project is + the current goal.}
 
-### Cursor
-```
-@{filename} Continue from this handoff. Start at Next Steps.
-```
+{Pick one line:}
+{  git:     } `{cwd}` | branch `{branch}` | last `{hash} {message}`
+{  no git:  } `{cwd}`
+{Uncommitted files, only if git and dirty — one line, paths only}
+{Stack/versions only if non-obvious or version-sensitive}
 
-### Windsurf (Cascade)
-```
-@{filename} Continue from this handoff. Start at Next Steps.
-```
+## Done
 
-### Antigravity
-```
-@{filename} Continue from this handoff. Start at Next Steps.
-```
+- {thing done — file/function/feature}
 
-### OpenAI Codex CLI
-```bash
-codex --context {filename} "Continue from handoff"
-```
+## In Progress
 
-### GitHub Copilot (VS Code)
-```
-#file:{filename} Continue from this handoff. Start at Next Steps.
-```
+**{task}** — {what's done vs what remains}. Stopped at: {exact point}.
 
-### Aider
-```bash
-aider --read {filename}
-# Then say: Continue from handoff
-```
+## Blocked
 
-### Gemini CLI
-```bash
-gemini --context {filename} "Continue from this handoff"
-```
+- {blocker + what unblocks it}
 
----
+## Decisions
 
-## Project Overview
+- **{decision}** — {why}; rejected {alt} because {reason}
 
-{2-3 sentences: what the project is, its purpose, the current goal.}
+## Files
 
-**Working directory:** `{path}`
-**Git branch:** `{branch}` | **Last commit:** `{hash} — {message}`
-
----
-
-## Session Summary
-
-### Completed This Session
-
-- {specific thing done — file name, function, feature}
-- 
-
-### In Progress (stopped here)
-
-- **Task:** {description}
-  - **Status:** {what's done vs what remains}
-  - **Stopped at:** {exact stopping point}
-
-### Blocked / Issues
-
-- {blocker or "None"}
-
----
-
-## Key Decisions
-
-| Decision | Rationale | Alternatives Rejected |
-|----------|-----------|-----------------------|
-| {decision} | {why} | {what was rejected and why} |
-
----
-
-## Files Modified
-
-| File | Change | Notes |
-|------|--------|-------|
-| {path} | {created/modified/deleted} | {brief note} |
-
----
-
-## Environment Snapshot
-
-```bash
-# Working directory
-{pwd}
-
-# Git status
-{git status --short or "not a git repo"}
-
-# Recent commits
-{git log --oneline -5 or "N/A"}
-
-# Key dependencies / versions
-{e.g. Node 20.x, Python 3.11 — skip if not relevant}
-```
-
----
+- `{path}` — {created|modified|deleted}, {what changed}
 
 ## Next Steps
 
-1. **{action}** — {file/area} — {why first}
-2. **{action}** — {file/area}
-3. **{action}** — {file/area}
-
----
+1. **{action}** — `{file/area}` — {why first}
+2. **{action}** — `{file/area}`
 
 ## Open Questions
 
-- [ ] {unresolved question}
+- [ ] {question}
+
+## Gotchas
+
+- {constraint, workaround, thing NOT to change, config location}
 
 ---
-
-## Context for Next AI
-
-{Gotchas, hidden constraints, workarounds, things NOT to change, config locations.}
-
-> {key warning or note}
-
----
-
-*Generated by [ai-handoff](https://github.com/ozgurersil/ai-handoff) Claude Code skill.*
-*Timestamp: {ISO 8601}*
+*[ai-handoff](https://github.com/ozgurersil/ai-handoff) — {ISO 8601}*
 ```
+
+**Resume commands** — emit only the row matching the configured editor (all rows if `all`):
+
+| Tool | Command |
+|------|---------|
+| Claude Code | `Continue from handoff: {filename}` |
+| Cursor / Windsurf / Antigravity | `@{filename} Continue from this handoff. Start at Next Steps.` |
+| GitHub Copilot | `#file:{filename} Continue from this handoff. Start at Next Steps.` |
+| OpenAI Codex CLI | `codex --context {filename} "Continue from handoff"` |
+| Aider | `aider --read {filename}` then `Continue from handoff` |
+| Gemini CLI | `gemini --context {filename} "Continue from this handoff"` |
 
 ### Step 5 — Confirm
 
